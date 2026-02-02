@@ -7,6 +7,7 @@ import ChampdeBataille from "./template/templates/ChampDeBataille";
 import CourDuChateau from "./template/templates/CourDuChateau";
 import Tavern from "./template/templates/taverne";
 
+
 function App() {
   const [chevalier, setChevalier] = useState(null);
   const [loading, setLoading] = useState(true);
