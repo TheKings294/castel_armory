@@ -17,7 +17,12 @@ function App() {
                     console.log("login:", data);
                     setLoginOpen(false);
                 }}
+                onRegister={(data) => {
+                    console.log("register:", data);
+                    setLoginOpen(false);
+                }}
             />
+
         </div>
     );
 }
