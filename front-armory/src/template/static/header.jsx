@@ -1,12 +1,27 @@
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-function Header({ isConnected, chevalier }) {
-  const location = useLocation();
+import LoginModal from "../login";
+function Header({ isConnected, setIsConnected, chevalier }) {
+  const [loginOpen, setLoginOpen] = useState(false);
 
   return (
     <header>
       <nav>
         <Link to="/">Château</Link>
+
+        {!isConnected && (
+          <button onClick={() => setLoginOpen(true)}>Se connecter</button>
+        )}
+
+        <LoginModal
+          open={loginOpen}
+          onClose={() => setLoginOpen(false)}
+          onSubmit={() => {
+            setIsConnected(true);
+            setLoginOpen(false);
+          }}
+        />
 
         {isConnected && (
           <>
@@ -16,8 +31,6 @@ function Header({ isConnected, chevalier }) {
         )}
 
         {chevalier?.equipements?.length > 0 && <Link to="/Combat">Combat</Link>}
-
-        {location.pathname !== "/Combat" && <span>⚔️ Prépare-toi</span>}
       </nav>
     </header>
   );
