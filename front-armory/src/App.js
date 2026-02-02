@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import LoginModal from "./template/login.jsx";
 
 function App() {
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  useEffect(() => {
+    const open = () => setLoginOpen(true);
+    window.addEventListener("open-login-modal", open);
+    return () => window.removeEventListener("open-login-modal", open);
+  }, []);
+
+  const handleLoginSubmit = ({ email, password }) => {
+    console.log("Login submit:", { email, password });
+
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <button onClick={() => setLoginOpen(true)}>Se connecter (test)</button>
+
+        <LoginModal
+            open={loginOpen}
+            onClose={() => setLoginOpen(false)}
+            onSubmit={handleLoginSubmit}
+        />
+
+
+      </div>
   );
 }
 
