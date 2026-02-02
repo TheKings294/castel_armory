@@ -3,6 +3,7 @@ package com.armory.api.controller;
 import com.armory.api.model.dto.AuthenticationRequest;
 import com.armory.api.model.dto.AuthenticationResponse;
 import com.armory.api.model.dto.RegisterRequest;
+import com.armory.api.model.dto.UserInformation;
 import com.armory.api.model.entity.User;
 import com.armory.api.model.repository.UserRepository;
 import com.armory.api.service.JwtService;
@@ -153,11 +154,11 @@ public class AuthenticationController {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        AuthenticationResponse response = new AuthenticationResponse(
-                null,
-                user.getEmail(),
+        UserInformation response = new UserInformation(
+                user.getId(),
+                user.getLastName(),
                 user.getFirstName(),
-                user.getLastName()
+                user.getEmail()
         );
 
         response.add(linkTo(methodOn(AuthenticationController.class).getCurrentUser(authHeader)).withSelfRel());
