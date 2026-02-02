@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../css/armurie.css";
 
 function Armurie() {
   const chevalier = {
@@ -29,40 +30,42 @@ function Armurie() {
   }
 
   return (
-    <main>
-      <h1>Bienvenue dans l'Armurie</h1>
-      <h2>Bienvenue, chevalier {chevalier.nom}</h2>
+    <main className="armurie">
+      <section className="armurie-globale">
+        <h1>Bienvenue dans l'Armurie</h1>
+        <h2>Bienvenue, chevalier {chevalier.nom}</h2>
 
-      {!estEquipe && (
-        <p>
-          Vous n’êtes pas encore équipé. S'équiper serait mieux pour les
-          combats.
-        </p>
-      )}
-      {estEquipe && (
-        <p>
-          Pour le moment vous êtes équipé de :
-          {equipements.map((item, index) => (
-            <span key={index}>
-              {" "}
+        {!estEquipe && (
+          <p>
+            Vous n’êtes pas encore équipé. S'équiper serait mieux pour les
+            combats.
+          </p>
+        )}
+        {estEquipe && (
+          <p>
+            Pour le moment vous êtes équipé de :
+            {equipements.map((item, index) => (
+              <li key={index}>
+                {" "}
+                {item}{" "}
+                <button onClick={() => retirerEquipement(item)}>
+                  retiré
+                </button>{" "}
+              </li>
+            ))}
+          </p>
+        )}
+
+        <h3>Équipements disponibles :</h3>
+        <ul>
+          {equipementsDisponibles.map((item, index) => (
+            <li key={index}>
               {item}{" "}
-              <button onClick={() => retirerEquipement(item)}>
-                retiré
-              </button>{" "}
-            </span>
+              <button onClick={() => ajouterEquipement(item)}>ajoutez</button>
+            </li>
           ))}
-        </p>
-      )}
-
-      <h3>Équipements disponibles :</h3>
-      <ul>
-        {equipementsDisponibles.map((item, index) => (
-          <li key={index}>
-            {item}{" "}
-            <button onClick={() => ajouterEquipement(item)}>ajoutez</button>
-          </li>
-        ))}
-      </ul>
+        </ul>
+      </section>
     </main>
   );
 }
