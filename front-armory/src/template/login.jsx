@@ -18,6 +18,28 @@ export default function LoginModal({ open, onSubmit }) {
     }
   }, [open]);
 
+  // Récupération de l'utilisateur courant
+  const fetchCurrentUser = async (token) => {
+    try {
+      const response = await fetch("http://localhost:9999/api/auth/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok)
+        throw new Error("Impossible de récupérer l'utilisateur");
+
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -62,6 +84,7 @@ export default function LoginModal({ open, onSubmit }) {
           onSubmit();
         }
       } else {
+        // Connexion
         const response = await fetch("http://localhost:9999/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -69,29 +92,32 @@ export default function LoginModal({ open, onSubmit }) {
         });
 
         const data = await response.json();
-        console.log("Réponse API login :", data);
-
         if (!response.ok) {
           setError(data.message || "Erreur lors de la connexion");
         } else {
+          // Stockage du token
           localStorage.setItem("token", data.token);
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              email: data.email,
-              firstName: data.firstName,
-              lastName: data.lastName,
-            }),
-          );
 
-          const payload = JSON.parse(atob(data.token.split(".")[1]));
-
-          console.log(payload);
+          // Récupération de l'utilisateur complet via /api/auth/me
+          const currentUser = await fetchCurrentUser(data.token);
+          if (currentUser) {
+            localStorage.setItem("user", JSON.stringify(currentUser));
+          } else {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                email: data.email,
+                firstName: data.firstName,
+                lastName: data.lastName,
+              }),
+            );
+          }
 
           onSubmit();
         }
       }
     } catch (err) {
+      console.error(err);
       setError("Erreur réseau ou serveur indisponible");
     } finally {
       setLoading(false);
