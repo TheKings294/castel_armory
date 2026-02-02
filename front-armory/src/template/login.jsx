@@ -26,15 +26,27 @@ export default function LoginModal({ open, onClose, onSubmit, onRegister }) {
         const password = form.password.value;
 
         if (mode === "register") {
-            const pseudo = form.pseudo.value.trim();
+            const firstName = form.firstName.value.trim();
+            const lastName = form.lastName.value.trim();
             const confirm = form.confirmPassword.value;
+
+            if (!firstName || !lastName) {
+                setError("Veuillez renseigner votre prénom et votre nom.");
+                return;
+            }
 
             if (password !== confirm) {
                 setError("Les mots de passe ne correspondent pas.");
                 return;
             }
 
-            onRegister?.({ pseudo, email, password });
+            onRegister?.({
+                firstName,
+                lastName,
+                email,
+                password,
+            });
+
             return;
         }
 
@@ -54,7 +66,7 @@ export default function LoginModal({ open, onClose, onSubmit, onRegister }) {
                     </button>
                 </div>
 
-                {/* Toggle Connexion/Inscription */}
+                {/* Tabs */}
                 <div className="authTabs">
                     <button
                         type="button"
@@ -74,15 +86,37 @@ export default function LoginModal({ open, onClose, onSubmit, onRegister }) {
 
                 <form className="modalBody" onSubmit={handleSubmit}>
                     {mode === "register" && (
-                        <label className="modalLabel">
-                            Pseudo
-                            <input className="modalInput" name="pseudo" type="text" required />
-                        </label>
+                        <>
+                            <label className="modalLabel">
+                                Prénom
+                                <input
+                                    className="modalInput"
+                                    name="firstName"
+                                    type="text"
+                                    required
+                                />
+                            </label>
+
+                            <label className="modalLabel">
+                                Nom
+                                <input
+                                    className="modalInput"
+                                    name="lastName"
+                                    type="text"
+                                    required
+                                />
+                            </label>
+                        </>
                     )}
 
                     <label className="modalLabel">
-                        Email
-                        <input className="modalInput" name="email" type="email" required />
+                        Adresse email
+                        <input
+                            className="modalInput"
+                            name="email"
+                            type="email"
+                            required
+                        />
                     </label>
 
                     <label className="modalLabel">
@@ -115,11 +149,10 @@ export default function LoginModal({ open, onClose, onSubmit, onRegister }) {
                         {mode === "login" ? "Se connecter" : "Créer mon compte"}
                     </button>
 
-                    {/* petit lien en bas */}
                     <p className="authSwitch">
                         {mode === "login" ? (
                             <>
-                                Pas de compte ?{" "}
+                                Pas encore de compte ?{" "}
                                 <button
                                     type="button"
                                     className="linkBtn"
@@ -130,7 +163,7 @@ export default function LoginModal({ open, onClose, onSubmit, onRegister }) {
                             </>
                         ) : (
                             <>
-                                Déjà un compte ?{" "}
+                                Déjà inscrit ?{" "}
                                 <button
                                     type="button"
                                     className="linkBtn"
