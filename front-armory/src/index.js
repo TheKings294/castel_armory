@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Header from "./template/static/header";
 import Armurie from "./template/templates/armurie";
 import ChampdeBataille from "./template/templates/ChampDeBataille";
 import CourDuChateau from "./template/templates/CourDuChateau";
+import Tavern from "./template/templates/taverne";
 
 function App() {
   const [chevalier, setChevalier] = useState(null);
@@ -33,6 +35,7 @@ function App() {
 
   return (
     <BrowserRouter>
+      <Header isConnected={isConnected} chevalier={chevalier} />
       <Routes>
         <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<CourDuChateau />} />
@@ -40,6 +43,11 @@ function App() {
           path="/Armurie"
           element={isConnected ? <Armurie /> : <Navigate to="/" replace />}
         />
+        <Route
+          path="/Taverne"
+          element={isConnected ? <Tavern /> : <Navigate to="/" replace />}
+        />
+
         <Route
           path="/Combat"
           element={
