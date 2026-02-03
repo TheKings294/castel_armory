@@ -1,0 +1,242 @@
+.tavern-page {
+    min-height: 100vh;
+    padding: 42px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 22px;
+
+    color: #f4e6c1;
+    font-family: Georgia, serif;
+
+    background-image:
+            linear-gradient(
+                    rgba(25, 15, 8, 0.65),
+                    rgba(10, 6, 4, 0.85)
+            ),
+            url("../../assets/images/tavern-bg.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.tavern-left h1 {
+    font-size: 34px;
+    margin: 0 0 10px;
+}
+
+.tavern-quote {
+    margin: 0 0 18px;
+    opacity: 0.9;
+}
+
+/* Carte menu */
+.menu-card {
+    max-width: 700px;
+    padding: 18px 18px;
+    border-radius: 16px;
+
+    background: rgba(15, 10, 6, 0.72);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.45);
+}
+
+.menu-card h2 {
+    margin: 0 0 12px;
+}
+
+.menu-section {
+    margin-top: 14px;
+}
+
+.menu-section h3 {
+    margin: 0 0 10px;
+    opacity: 0.92;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+}
+
+.menu-item {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 2px;
+
+    padding: 12px 12px;
+    border-radius: 14px;
+    cursor: pointer;
+
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(0,0,0,0.25);
+    color: #f4e6c1;
+    text-align: left;
+}
+
+.menu-item:hover {
+    background: rgba(0,0,0,0.35);
+    transform: translateY(-1px);
+}
+
+.menu-item.selected {
+    border-color: rgba(214, 165, 70, 0.55);
+    box-shadow: 0 0 0 3px rgba(214, 165, 70, 0.12);
+}
+
+.menu-icon {
+    grid-row: 1 / span 2;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-name {
+    font-weight: 800;
+}
+
+.menu-desc {
+    opacity: 0.85;
+    font-size: 13px;
+    grid-column: 2 / 3;
+}
+
+.menu-action {
+    grid-column: 3 / 4;
+    grid-row: 1 / span 2;
+    align-self: center;
+    font-weight: 800;
+    opacity: 0.9;
+}
+
+.menu-footer {
+    margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-clear {
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(242, 224, 184, 0.95);
+    color: #2b1607;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.btn-clear:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+/* Table à droite */
+.table-card {
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(15, 10, 6, 0.72);
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.45);
+    position: sticky;
+    top: 18px;
+}
+
+.table-header h2 {
+    margin: 0 0 6px;
+}
+
+.table-header p {
+    margin: 0 0 14px;
+    opacity: 0.85;
+}
+
+/* La "table" en bois */
+.wood-table {
+    border-radius: 18px;
+    padding: 18px;
+    min-height: 260px;
+
+    background:
+            linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45)),
+            repeating-linear-gradient(
+                    90deg,
+                    rgba(120, 75, 20, 0.35) 0px,
+                    rgba(120, 75, 20, 0.35) 18px,
+                    rgba(85, 50, 15, 0.35) 18px,
+                    rgba(85, 50, 15, 0.35) 36px
+            );
+    border: 1px solid rgba(255,255,255,0.10);
+    box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
+}
+
+.table-empty {
+    opacity: 0.85;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(0,0,0,0.25);
+}
+
+.table-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.table-item {
+    display: grid;
+    gap: 6px;
+    align-items: center;
+    justify-items: center;
+
+    padding: 10px 12px;
+    border-radius: 14px;
+
+    background: rgba(0,0,0,0.28);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #f4e6c1;
+    cursor: pointer;
+}
+
+.table-item:hover {
+    background: rgba(0,0,0,0.38);
+    transform: translateY(-1px);
+}
+
+.table-icon {
+    font-size: 26px;
+}
+
+.table-label {
+    font-size: 12px;
+    opacity: 0.9;
+    text-align: center;
+    max-width: 140px;
+}
+
+.table-hint {
+    margin-top: 10px;
+    opacity: 0.85;
+    font-size: 13px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .tavern-page {
+        grid-template-columns: 1fr;
+    }
+
+    .table-card {
+        position: static;
+    }
+}
+
+
+
