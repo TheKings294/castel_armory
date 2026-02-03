@@ -4,6 +4,7 @@ import com.armory.api.type.EquipmentType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class Equipment extends BaseEntity{
     private Boolean isAvailable = true;
 
     @ManyToOne
+    @JoinColumn(nullable = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private User user;
 }
