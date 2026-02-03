@@ -98,9 +98,9 @@ function Armurie() {
   const retirerEquipement = async (equipementId) => {
     try {
       const res = await fetch(
-        `http://localhost:9999/api/equipment/${equipementId}`,
+        `http://localhost:9999/api/knights/equipment/remove/${equipementId}`,
         {
-          method: "DELETE",
+          method: "POST",
           headers: { Authorization: `Bearer ${token}` },
         },
       );
@@ -109,7 +109,9 @@ function Armurie() {
       const removed = equipements.find((e) => e.id === equipementId);
 
       setEquipements((prev) => prev.filter((e) => e.id !== equipementId));
-      setEquipementsDisponibles((prev) => [...prev, removed]);
+      if (removed) {
+        setEquipementsDisponibles((prev) => [...prev, removed]);
+      }
     } catch (err) {
       setError(err.message);
     }
