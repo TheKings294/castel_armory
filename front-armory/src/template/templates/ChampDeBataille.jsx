@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-// import { Navigate } from "react-router-dom"; // ⛔ désactivé pour éviter les redirections
+import { Navigate } from "react-router-dom";
 import "../css/combat.css";
 
 function PageCombat({ chevalierId }) {
-    // ⛔ On force un chevalier fictif pour voir la page
     const [chevalier, setChevalier] = useState({
         nom: "Arthur",
         equipements: ["Épée", "Bouclier", "Armure lourde"],
     });
 
-    // ⛔ Plus besoin de loading pour le CSS
     const [loading, setLoading] = useState(false);
 
-    /*
-    // ⛔ Désactivé temporairement : appel API
+
+
     useEffect(() => {
         fetch(`http://localhost:8080/api/user`)
             .then((res) => {
@@ -30,10 +28,8 @@ function PageCombat({ chevalierId }) {
                 setLoading(false);
             });
     }, [chevalierId]);
-    */
 
-    /*
-    // ⛔ Désactivé : écran de chargement
+
     if (loading) {
         return (
             <p className="combat__loading">
@@ -41,14 +37,12 @@ function PageCombat({ chevalierId }) {
             </p>
         );
     }
-    */
 
-    /*
-    // ⛔ Désactivé : redirection automatique
+
     if (!chevalier || chevalier.equipements.length === 0) {
         return <Navigate to="/Armurie" replace />;
     }
-    */
+
 
     return (
         <main className="combat">
