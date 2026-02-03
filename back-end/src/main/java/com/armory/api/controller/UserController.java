@@ -1,11 +1,15 @@
 package com.armory.api.controller;
 
+import com.armory.api.model.dto.UserEquipmentResponse;
 import com.armory.api.model.entity.Equipment;
 import com.armory.api.model.entity.User;
+import com.armory.api.model.service.EquipmentService;
 import com.armory.api.model.service.UserService;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +20,9 @@ import java.util.stream.Collectors;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EquipmentService equipmentService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAll() {
@@ -71,11 +78,32 @@ public class UserController {
                     .map(Equipment::getName)
                     .collect(Collectors.toList());
             String knightName = user.getFirstName();
-            return ResponseEntity.ok(new UserEquipmentResponse(knightName, equipmentNames));
+            return ResponseEntity.ok(new UserEquipmentResponse(user.getLastName() ,knightName, equipmentNames));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    private record UserEquipmentResponse(String knight, List<String> equipment) {}
+    @PostMapping("/equipment/add/{id}")
+    public ResponseEntity<UserEquipmentResponse> addEquipment(
+            @PathVariable
+            @Schema(description = "The Id of an equipment")
+            Long id,
+            @AuthenticationPrincipal User userDetail
+    ) {
+        Equipment e = this.equipmentService.selectOneById(id);
+        User u = userService.selectOneById(userDetail.getId());
+
+        List<Equipment> le = u.getEquipments();
+        le.add(e);
+        u.setEquipments(le);
+
+        userService.update(u);
+
+        List<String> equipmentNames = u.getEquipments().stream()
+                .map(Equipment::getName)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipmentNames));
+    }
 }

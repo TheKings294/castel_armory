@@ -14,6 +14,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EquipmentService equipmentService;
+
     public List<User> selectAll() {
         return this.userRepository.findAll();
     }
@@ -33,6 +36,11 @@ public class UserService {
     }
 
     public User update(User user) {
+        user.getEquipments().forEach(e -> {
+            e.setUser(user);
+            equipmentService.update(e);
+        });
+
         return this.userRepository.save(user);
     }
 
