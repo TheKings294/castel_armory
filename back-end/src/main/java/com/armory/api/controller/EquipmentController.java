@@ -1,5 +1,6 @@
 package com.armory.api.controller;
 
+import com.armory.api.model.dto.EquipmentRequest;
 import com.armory.api.model.entity.Equipment;
 import com.armory.api.model.service.EquipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,13 @@ public class EquipmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Equipment> create(@RequestBody Equipment equipment) {
-        Equipment saved = equipmentService.insert(equipment);
+    public ResponseEntity<Equipment> create(@RequestBody EquipmentRequest equipment) {
+        Equipment e = new Equipment();
+        e.setName(equipment.getName());
+        e.setType(equipment.getType());
+        e.setIsAvailable(equipment.getIsAvailable());
+
+        Equipment saved = equipmentService.insert(e);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 

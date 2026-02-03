@@ -1,57 +1,64 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { useChevalierEquipements } from "./hook/a";
+import Header from "./template/static/header";
 import Armurie from "./template/templates/armurie";
 import ChampdeBataille from "./template/templates/ChampDeBataille";
 import CourDuChateau from "./template/templates/CourDuChateau";
+import Tavern from "./template/templates/taverne";
 
 function App() {
   const [chevalier, setChevalier] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const isConnected = true;
+  const [isConnected, setIsConnected] = useState(
+    !!localStorage.getItem("token"),
+  );
 
-  useEffect(() => {
-    fetch(`http://localhost:8080/api/user`)
-      .then((res) => {
-        if (!res.ok)
-          throw new Error("Erreur lors de la récupération du chevalier");
-        return res.json();
-      })
-      .then((data) => {
-        setChevalier(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+  const {
+    equipements,
+    estEquipe,
+    loading: equipLoading,
+    error,
+  } = useChevalierEquipements(isConnected);
 
-  if (loading) {
-    return <div>Chargement...</div>;
-  }
+  if (equipLoading) return <p>Chargement des équipements...</p>;
+  if (error) return <p>Erreur : {error}</p>;
 
   return (
     <BrowserRouter>
+      <Header
+        isConnected={isConnected}
+        setIsConnected={setIsConnected}
+        chevalier={chevalier}
+      />
+
       <Routes>
-        <Route path="*" element={<Navigate to="/" replace />} />
         <Route path="/" element={<CourDuChateau />} />
+
         <Route
           path="/Armurie"
-          element={isConnected ? <Armurie /> : <Navigate to="/" replace />}
+          element={isConnected ? <Armurie /> : <Navigate to="/" />}
         />
+
+        <Route
+          path="/Taverne"
+          element={isConnected ? <Tavern /> : <Navigate to="/" />}
+        />
+
         <Route
           path="/Combat"
           element={
-            chevalier &&
-            chevalier.equipements &&
-            chevalier.equipements.length > 0 ? (
+            equipLoading ? (
+              <p>Chargement des équipements...</p>
+            ) : estEquipe ? (
               <ChampdeBataille />
             ) : (
-              <Navigate to="/Armurie" replace />
+              <Navigate to="/Armurie" />
             )
           }
         />
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );

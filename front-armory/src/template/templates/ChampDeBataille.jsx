@@ -1,47 +1,45 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import "../css/ChampDeBataille.css";
 
 function PageCombat({ chevalierId }) {
   const [chevalier, setChevalier] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`http://localhost:8080/api/user`)
-      .then((res) => {
-        if (!res.ok)
-          throw new Error("Erreur lors de la récupération du chevalier");
-        return res.json();
-      })
-      .then((data) => {
-        setChevalier(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, [chevalierId]);
-
-  if (loading) return <p>Chargement des informations du chevalier...</p>;
-
-  if (!chevalier || chevalier.equipements.length === 0) {
-    return <Navigate to="/Armurie" replace />;
-  }
+  //   useEffect(() => {
+  //     fetch(`http://localhost:8080/api/user`)
+  //       .then((res) => {
+  //         if (!res.ok)
+  //           throw new Error("Erreur lors de la récupération du chevalier");
+  //         return res.json();
+  //       })
+  //       .then((data) => {
+  //         setChevalier(data);
+  //         setLoading(false);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //         setLoading(false);
+  //       });
+  //   }, [chevalierId]);
 
   return (
-    <main style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
-      <h1>Bienvenue au Combat, {chevalier.nom}</h1>
-      <p>
+    <main
+      style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}
+      className="bataille"
+    >
+      {/* <h1>Bienvenue au Combat, {chevalier.nom}</h1> */}
+      {/* <p>
         Vous êtes prêt avec vos équipements : {chevalier.equipements.join(", ")}
-      </p>
+      </p> */}
 
       <section style={{ marginTop: "2rem" }}>
         <h2>Votre équipement détaillé :</h2>
-        <ul>
+        {/* <ul>
           {chevalier.equipements.map((item, index) => (
             <li key={index}>{item}</li>
           ))}
-        </ul>
+        </ul> */}
       </section>
 
       <section style={{ marginTop: "2rem" }}>
