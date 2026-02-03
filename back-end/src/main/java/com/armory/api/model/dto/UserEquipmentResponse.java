@@ -19,5 +19,5 @@ public class UserEquipmentResponse extends RepresentationModel<UserEquipmentResp
     private String firstName;
 
     @NotBlank
-    private List<String> equipment;
+    private List<EquipmentResponse> equipment;
 }
