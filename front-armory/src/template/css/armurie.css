@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.armurie {
+  height: 100vh;
+  background-image:
+    linear-gradient(rgba(30, 18, 10, 0.7), rgba(15, 9, 5, 0.9)),
+    url("../../assets/images/Armory.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.armurie-globale {
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 40px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+h1 {
+  color: #f1f1f1;
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 5px;
+}
+
+h2 {
+  color: #e0e0e0;
+  font-size: 1.6rem;
+}
+
+p {
+  color: #dcdcdc;
+  line-height: 1.5;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+li {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+  width: fit-content;
+}
+
+li:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+button {
+  background-color: #8b5cf6;
+  border: none;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
+}
+
+button:hover {
+  background-color: #7c3aed;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .armurie-globale {
+    padding: 20px;
+    width: 90%;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+}
