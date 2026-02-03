@@ -1,17 +1,24 @@
 import { useState } from "react";
 import LoginModal from "./template/login.jsx";
+import CourDuChateau from "./template/templates/CourDuChateau.jsx";
 import Tavern from "./template/templates/taverne.jsx";
+
 
 function App() {
     const [loginOpen, setLoginOpen] = useState(false);
 
     return (
+
+        <>
+            <CourDuChateau onOpenLogin={() => setLoginOpen(true)} />
+
         <div>
             <Tavern />
 
             <button onClick={() => setLoginOpen(true)}>
                 Se connecter
             </button>
+
 
             <LoginModal
                 open={loginOpen}
@@ -20,13 +27,8 @@ function App() {
                     console.log("login:", data);
                     setLoginOpen(false);
                 }}
-                onRegister={(data) => {
-                    console.log("register:", data);
-                    setLoginOpen(false);
-                }}
             />
-
-        </div>
+        </>
     );
 }
 
