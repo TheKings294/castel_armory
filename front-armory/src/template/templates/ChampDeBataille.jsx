@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import "../css/combat.css";
@@ -86,6 +87,6 @@ function PageCombat({ chevalierId }) {
         </main>
     );
 
-}
+
 
 export default PageCombat;
