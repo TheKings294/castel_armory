@@ -1,5 +1,6 @@
 package com.armory.api.controller;
 
+import com.armory.api.model.dto.EquipmentResponse;
 import com.armory.api.model.dto.UserEquipmentResponse;
 import com.armory.api.model.entity.Equipment;
 import com.armory.api.model.entity.User;
@@ -74,11 +75,11 @@ public class UserController {
     public ResponseEntity<UserEquipmentResponse> getEquipment(@PathVariable Long id) {
         try {
             User user = userService.selectOneById(id);
-            List<String> equipmentNames = user.getEquipments().stream()
-                    .map(Equipment::getName)
+            List<EquipmentResponse> equipments = user.getEquipments().stream()
+                    .map(EquipmentResponse::new)
                     .collect(Collectors.toList());
             String knightName = user.getFirstName();
-            return ResponseEntity.ok(new UserEquipmentResponse(user.getLastName() ,knightName, equipmentNames));
+            return ResponseEntity.ok(new UserEquipmentResponse(user.getLastName() ,knightName, equipments));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -100,11 +101,11 @@ public class UserController {
 
         userService.update(u);
 
-        List<String> equipmentNames = u.getEquipments().stream()
-                .map(Equipment::getName)
+        List<EquipmentResponse> equipments = u.getEquipments().stream()
+                .map(EquipmentResponse::new)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipmentNames));
+        return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipments));
     }
 
     @PostMapping("/equipment/remove/{id}")
@@ -123,10 +124,10 @@ public class UserController {
 
         userService.update(u);
 
-        List<String> equipmentNames = u.getEquipments().stream()
-                .map(Equipment::getName)
+        List<EquipmentResponse> equipments = u.getEquipments().stream()
+                .map(EquipmentResponse::new)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipmentNames));
+        return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipments));
     }
 }
