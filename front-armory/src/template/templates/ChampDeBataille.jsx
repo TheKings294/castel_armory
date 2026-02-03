@@ -1,27 +1,9 @@
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useState } from "react";
 import "../css/ChampDeBataille.css";
 
 function PageCombat({ chevalierId }) {
   const [chevalier, setChevalier] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  //   useEffect(() => {
-  //     fetch(`http://localhost:8080/api/user`)
-  //       .then((res) => {
-  //         if (!res.ok)
-  //           throw new Error("Erreur lors de la récupération du chevalier");
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //         setChevalier(data);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //         setLoading(false);
-  //       });
-  //   }, [chevalierId]);
 
   return (
     <main
