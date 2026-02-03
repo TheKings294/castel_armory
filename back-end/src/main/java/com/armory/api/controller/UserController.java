@@ -106,4 +106,27 @@ public class UserController {
 
         return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipmentNames));
     }
+
+    @PostMapping("/equipment/remove/{id}")
+    public ResponseEntity<UserEquipmentResponse> unequipEquipment(
+            @PathVariable
+            @Schema(description = "The Id of an equipment")
+            Long id,
+            @AuthenticationPrincipal User userDetail
+    ) {
+        Equipment e = this.equipmentService.selectOneById(id);
+        User u = userService.selectOneById(userDetail.getId());
+
+        List<Equipment> le = u.getEquipments();
+        le.remove(e);
+        u.setEquipments(le);
+
+        userService.update(u);
+
+        List<String> equipmentNames = u.getEquipments().stream()
+                .map(Equipment::getName)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(new UserEquipmentResponse(u.getLastName(), u.getFirstName(), equipmentNames));
+    }
 }
