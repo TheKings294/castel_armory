@@ -1,49 +1,60 @@
+// hook/useChevalierEquipements.js
 import { useEffect, useState } from "react";
 
-export function useChevalierEquipements(isConnected, chevalierId) {
+export function useChevalierEquipements(isConnected) {
+  const [chevalier, setChevalier] = useState(null);
   const [equipements, setEquipements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const estEquipe = equipements.length > 0;
+
   useEffect(() => {
-    if (!isConnected || !chevalierId) {
-      setLoading(false);
+    if (!isConnected) {
+      setChevalier(null);
       setEquipements([]);
+      setLoading(false);
       return;
     }
 
-    const fetchEquipements = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("Vous devez être connecté");
+      setLoading(false);
+      return;
+    }
+
+    const fetchChevalier = async () => {
       setLoading(true);
-      setError(null);
       try {
-        const token = localStorage.getItem("token");
-        if (!token) throw new Error("Utilisateur non authentifié");
+        // Récupération du chevalier
+        const userRes = await fetch("http://localhost:9999/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!userRes.ok)
+          throw new Error("Impossible de récupérer l'utilisateur");
 
-        const res = await fetch(
-          `http://localhost:9999/api/equipment/${chevalierId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        const userData = await userRes.json();
+        setChevalier({ id: userData.id, prenom: userData.firstName });
+
+        const equipRes = await fetch(
+          `http://localhost:9999/api/knights/${userData.id}/equipment`,
+          { headers: { Authorization: `Bearer ${token}` } },
         );
+        if (!equipRes.ok)
+          throw new Error("Impossible de récupérer les équipements");
 
-        if (!res.ok) throw new Error("Impossible de récupérer les équipements");
-
-        const data = await res.json();
-        setEquipements(data);
+        const chevalierEquip = await equipRes.json();
+        setEquipements(chevalierEquip.equipment || []);
       } catch (err) {
         setError(err.message);
-        setEquipements([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEquipements();
-  }, [isConnected, chevalierId]);
+    fetchChevalier();
+  }, [isConnected]);
 
-  const estEquipe = equipements.length > 0;
-
-  return { equipements, estEquipe, loading, error };
+  return { chevalier, equipements, estEquipe, loading, error };
 }
