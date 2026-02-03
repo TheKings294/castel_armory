@@ -1,83 +1,143 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../css/armurie.css";
 
 function Armurie() {
-  const [chevalier, setChevalier] = useState({
-    first_name: "",
-    equipements: [],
-  });
-  const [equipementsDisponibles, setEquipementsDisponibles] = useState([]);
+  const [chevalier, setChevalier] = useState({ id: null, prenom: "" });
   const [equipements, setEquipements] = useState([]);
+  const [equipementsDisponibles, setEquipementsDisponibles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const estEquipe = equipements.length > 0;
+  const token = localStorage.getItem("token");
 
-  //   useEffect(() => {
-  //     const token = localStorage.getItem("token");
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!token) {
+        setError("Vous devez être connecté");
+        setLoading(false);
+        return;
+      }
 
-  //     if (!token) {
-  //       setError("Vous devez être connecté");
-  //       setLoading(false);
-  //       return;
-  //     }
+      try {
+        const userRes = await fetch("http://localhost:9999/api/auth/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!userRes.ok)
+          throw new Error("Impossible de récupérer l'utilisateur");
 
-  //     // Fetch des données depuis le backend
-  //     fetch("http://localhost:8080/equipements", {
-  //       method: "GET",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     })
-  //       .then((res) => {
-  //         if (!res.ok)
-  //           throw new Error("Erreur lors du chargement des équipements");
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //         // Backend renvoie { prenom: "Dimitri", equipements: [], equipementsDisponibles: [...] }
-  //         setChevalier({ prenom: data.prenom, equipements: data.equipements });
-  //         setEquipements(data.equipements);
-  //         setEquipementsDisponibles(data.equipementsDisponibles);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => {
-  //         setError(err.message);
-  //         setLoading(false);
-  //       });
-  //   }, []);
+        const userData = await userRes.json();
+        const userId = userData.id;
+        setChevalier({ id: userId, prenom: userData.firstName });
 
-  function ajouterEquipement(nouvelEquipement) {
-    if (!equipements.includes(nouvelEquipement)) {
-      setEquipements([...equipements, nouvelEquipement]);
+        const equipRes = await fetch(
+          `http://localhost:9999/api/knights/${userId}/equipment`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        if (!equipRes.ok)
+          throw new Error("Impossible de récupérer les équipements");
+
+        const chevalierEquip = await equipRes.json();
+        const currentEquipements = chevalierEquip.equipment || [];
+        setEquipements(currentEquipements);
+
+        const allEquipRes = await fetch("http://localhost:9999/api/equipment", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!allEquipRes.ok)
+          throw new Error("Impossible de récupérer tous les équipements");
+
+        const allEquip = await allEquipRes.json();
+
+        const disponibles = allEquip.filter(
+          (eq) => !currentEquipements.some((e) => e.id === eq.id),
+        );
+        setEquipementsDisponibles(disponibles);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  const ajouterEquipement = async (equipement) => {
+    if (!chevalier.id) {
+      setError("Utilisateur non identifié");
+      return;
     }
-  }
 
-  function retirerEquipement(equipementARetirer) {
-    setEquipements(equipements.filter((eq) => eq !== equipementARetirer));
-  }
+    try {
+      const bodyData = { equipment_id: equipement.id };
+
+      const res = await fetch(
+        `http://localhost:9999/api/knights/equipment/add/${equipement.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(bodyData),
+        },
+      );
+      if (!res.ok) throw new Error("Erreur ajout équipement");
+
+      const saved = await res.json();
+
+      setEquipements((prev) => [...prev, saved]);
+      setEquipementsDisponibles((prev) =>
+        prev.filter((eq) => eq.id !== saved.id),
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const retirerEquipement = async (equipementId) => {
+    try {
+      const res = await fetch(
+        `http://localhost:9999/api/equipment/${equipementId}`,
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+      if (!res.ok) throw new Error("Erreur suppression équipement");
+
+      const removed = equipements.find((e) => e.id === equipementId);
+
+      setEquipements((prev) => prev.filter((e) => e.id !== equipementId));
+      setEquipementsDisponibles((prev) => [...prev, removed]);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur : {error}</p>;
 
   return (
     <main className="armurie">
       <section className="armurie-globale">
-        <h1>Bienvenue dans l'Armurie</h1>
-        <h2>Bienvenue, chevalier {chevalier.first_name}</h2>
+        <h1>Bienvenue dans l’Armurie</h1>
+        <h2>Bienvenue, chevalier {chevalier.prenom}</h2>
 
-        {!estEquipe ? (
+        {equipements.length === 0 ? (
           <p>
-            Vous n’êtes pas encore équipé. S'équiper serait mieux pour les
+            Vous n’êtes pas encore équipé. S’équiper serait préférable pour les
             combats.
           </p>
         ) : (
           <>
-            <p>Pour le moment vous êtes équipé de :</p>
+            <p>Vous êtes actuellement équipé de :</p>
             <ul>
-              {equipements.map((item, index) => (
-                <li key={index}>
-                  {item}{" "}
-                  <button onClick={() => retirerEquipement(item)}>
-                    retiré
+              {equipements.map((item) => (
+                <li key={item.id}>
+                  {item.name}
+                  <button onClick={() => retirerEquipement(item.id)}>
+                    Retirer
                   </button>
                 </li>
               ))}
@@ -87,10 +147,10 @@ function Armurie() {
 
         <h3>Équipements disponibles :</h3>
         <ul>
-          {equipementsDisponibles.map((item, index) => (
-            <li key={index}>
-              {item}{" "}
-              <button onClick={() => ajouterEquipement(item)}>ajoutez</button>
+          {equipementsDisponibles.map((item) => (
+            <li key={item.id}>
+              {item.name}
+              <button onClick={() => ajouterEquipement(item)}>Ajouter</button>
             </li>
           ))}
         </ul>

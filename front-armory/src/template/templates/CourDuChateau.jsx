@@ -1,14 +1,43 @@
+import { useEffect, useState } from "react";
 import "../css/cour.css";
 import Header from "../components/Header";
 
 function CourDuChateau({ onOpenLogin }) {
-    const chevalier = {
-        isConnected: false,
-        nom: "Dimitri",
-        equipements: ["épée"],
+  const [chevalier, setChevalier] = useState({
+    id: null,
+    prenom: "",
+    isConnected: false,
+  });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!token) {
+        setError("Vous devez être connecté");
+        setChevalier({ id: null, prenom: "", isConnected: false });
+        setLoading(false);
+        return;
+      }
+
+      const storedUser = localStorage.getItem("user");
+      if (!storedUser) {
+        setError("Impossible de récupérer l'utilisateur");
+        setChevalier({ id: null, prenom: "", isConnected: false });
+        setLoading(false);
+        return;
+      }
+
+      const user = JSON.parse(storedUser);
+      setChevalier({ id: user.id, prenom: user.firstName, isConnected: true });
+      setLoading(false);
     };
 
-    const estEquipe = chevalier.equipements.length > 0;
+    fetchData();
+  }, [token]);
+
 
     return (
         <>
@@ -70,6 +99,7 @@ function CourDuChateau({ onOpenLogin }) {
             </main>
         </>
     );
+
 }
 
 export default CourDuChateau;
