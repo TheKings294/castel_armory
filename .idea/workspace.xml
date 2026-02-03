@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="70b213cf-06dd-4920-bb42-7b7202ef6190" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/front-armory/src/template/components/Header.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/front-armory/src/template/css/header.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-armory/src/template/css/cour.css" beforeDir="false" afterPath="$PROJECT_DIR$/front-armory/src/template/css/cour.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-armory/src/template/templates/CourDuChateau.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/front-armory/src/template/templates/CourDuChateau.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
